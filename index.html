@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>maimai登录二维码转换工具</title>
+        <script src="./qrcode.min.js"></script>
+        <style>
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+input#input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box; /* 确保输入框的宽度不会超出屏幕宽度 */
+}
+
+canvas#canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+}
+        </style>
+    </head>
+    <body>
+        <p>请复制二维码页面的链接：</p>
+        <p>1. 点右上角三个点</p>
+        <p>2. 点复制链接</p>
+        <p>3. 粘贴到下面的文本框</p>
+        <div>
+            <input type="text" id="input" placeholder="http://...">
+        </div>
+        <canvas id="canvas"/>
+        <script>
+            var input = document.getElementById('input');
+            var canvas = document.getElementById('canvas');
+            function onInput() {
+                var text = input.value;
+                var re = /\/(MAID\w+\.)/;
+                var match = re.exec(text);
+                if (match) {
+                    text = match[1];
+
+                    qrcodelib.toCanvas(document.getElementById('canvas'), 'SGWC' + text, function (error) {
+                        if (error) console.error(error)
+                        console.log('success!');
+                    })
+                }
+            }
+            input.addEventListener('input', onInput);
+            onInput();
+        </script>
+    </body>
+</html>

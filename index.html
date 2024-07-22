@@ -38,16 +38,30 @@ canvas#canvas {
         <div>
             <input type="text" id="input" placeholder="http://...">
         </div>
-        <canvas id="canvas"/>
+        <canvas id="canvas"></canvas>
+        <div id="tips"></div>
         <script>
             var input = document.getElementById('input');
             var canvas = document.getElementById('canvas');
+            var tips = document.getElementById('tips');
+
+            function formatDate(date) {
+                // 生成为 YYYY-MM-DD HH:MM:SS
+                return date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0') + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0') + ':' + date.getSeconds().toString().padStart(2, '0');
+            }
+
             function onInput() {
                 var text = input.value;
                 var re = /\/(MAID\w+\.)/;
                 var match = re.exec(text);
                 if (match) {
                     text = match[1];
+                    var dateText = text.substring(4, 16);
+                    // from YYMMDDHHMMSS to Date
+                    var date = new Date('20' + dateText.substring(0, 2), dateText.substring(2, 4) - 1, dateText.substring(4, 6), dateText.substring(6, 8), dateText.substring(8, 10), dateText.substring(10, 12));
+
+                    // 10分钟有效期
+                    tips.innerText = '二维码有效期：' + formatDate(date) + ' - ' + formatDate(new Date(date.getTime() + 10 * 60 * 1000));
 
                     qrcodelib.toCanvas(document.getElementById('canvas'), 'SGWC' + text, function (error) {
                         if (error) console.error(error)

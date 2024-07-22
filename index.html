@@ -70,6 +70,10 @@ canvas#canvas {
                 }
             }
             input.addEventListener('input', onInput);
+            input.addEventListener('paste', function(event) {
+                // 短暂延迟以确保粘贴内容已经被输入框接收
+                setTimeout(onInput, 1);
+            });
             onInput();
         </script>
     </body>
